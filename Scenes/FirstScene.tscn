@@ -1,22 +1,57 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjfb3pjs7xrbf"]
+[gd_scene load_steps=3 format=3 uid="uid://bjfb3pjs7xrbf"]
 
-[ext_resource type="Script" path="res://Scripts/GoToHypnoSceneButton.gd" id="1_lm6pp"]
+[ext_resource type="Script" path="res://Scripts/first_scene.gd" id="1_hqyvb"]
+[ext_resource type="Script" path="res://Scripts/select_and_play_file.gd" id="2_xfv2x"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Main" type="Node2D"]
+script = ExtResource("1_hqyvb")
+metadata/_edit_vertical_guides_ = [575.0]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="MainMenuUI" type="CanvasLayer" parent="."]
 
-[node name="Button" type="Button" parent="."]
+[node name="BeginHypnosisButton" type="Button" parent="MainMenuUI"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 421.0
-offset_top = 212.0
-offset_right = 731.0
-offset_bottom = 436.0
+offset_left = -155.0
+offset_top = -112.0
+offset_right = 155.0
+offset_bottom = 112.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Begin Hypnosis"
-script = ExtResource("1_lm6pp")
+
+[node name="LoadFileButton" type="Button" parent="MainMenuUI"]
+offset_left = 504.0
+offset_top = 482.0
+offset_right = 650.0
+offset_bottom = 532.0
+text = "Load MP3"
+
+[node name="FileSelectedLabel" type="Label" parent="MainMenuUI"]
+offset_left = -146.0
+offset_top = 548.0
+offset_right = 1297.0
+offset_bottom = 597.0
+text = "Loaded file:
+Nothing loaded"
+horizontal_alignment = 1
+
+[node name="SelectAndPlayFile" type="FileDialog" parent="MainMenuUI"]
+auto_translate_mode = 1
+title = "Open a File"
+position = Vector2i(185, 111)
+size = Vector2i(793, 505)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.mp3", "*.ogg")
+script = ExtResource("2_xfv2x")
+
+[node name="SceneContainer" type="Node2D" parent="."]
+
+[connection signal="pressed" from="MainMenuUI/BeginHypnosisButton" to="." method="_on_begin_hypnosis_pressed"]
+[connection signal="pressed" from="MainMenuUI/LoadFileButton" to="MainMenuUI/SelectAndPlayFile" method="_on_load_file_pressed"]
+[connection signal="file_selected" from="MainMenuUI/SelectAndPlayFile" to="MainMenuUI/SelectAndPlayFile" method="_on_FileDialog_file_selected"]
