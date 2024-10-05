@@ -20,7 +20,10 @@ func _on_FileDialog_file_selected(path:String):
 		"ogg":
 			ASPlayer2D.stream = AudioStreamOggVorbis.load_from_file(path)
 		"mp3":
-			print("MP3 importing not implemented yet")
+			var file = FileAccess.open(path, FileAccess.READ)
+			var mp3 = AudioStreamMP3.new()
+			mp3.data = file.get_buffer(file.get_length())
+			ASPlayer2D.stream = mp3
 		_:
 			print("unexpected file type")
 	ASPlayer2D.play()
