@@ -1,20 +1,24 @@
 extends Node2D
 
-var MainMenuUI:CanvasLayer
-var FileSelectedLabel: Label
-var SceneContainer:Node2D
-var selectedFilePath:String
+var MainMenuUI: CanvasLayer
+var MP3SelectedLabel: Label
+var SubSelectedLabel: Label
+var SceneContainer: Node2D
+var selectedAudioPath: String
+var selectedSubPath: String
 
-var Hypno_scene_res:Resource
-var HypnoScene:Node2D
-var HSPlayer:AudioStreamPlayer2D
+var Hypno_scene_res: Resource
+var HypnoScene: Node2D
+var HSPlayer: AudioStreamPlayer2D
+var SubLabel
 
 
 const HYPNO_SCENE_PATH = "res://Scenes/HypnoScene.tscn"
 
 func _ready():
 	MainMenuUI = $MainMenuUI
-	FileSelectedLabel = $MainMenuUI/FileSelectedLabel
+	MP3SelectedLabel = $MainMenuUI/MP3SelectedLabel
+	SubSelectedLabel = $MainMenuUI/SubSelectedLabel
 	SceneContainer = $SceneContainer
 	ResourceLoader.load_threaded_request(HYPNO_SCENE_PATH)
 	
@@ -25,21 +29,26 @@ func startHypno():
 		SceneContainer.add_child(HypnoScene)
 		HypnoScene.set_visibility(true)
 		HSPlayer = $SceneContainer/HypnoScene/Control/ASPlayer2D
+		SubLabel = $SceneContainer/HypnoScene/CanvasLayer/sub
 		HSPlayer.finished.connect(_on_play_finished)
 	else:
 		SceneContainer.get_child(0).visible = true
 		HypnoScene.set_visibility(true)
-	loadFromPath(selectedFilePath)
+	loadAudioFromPath(selectedAudioPath)
+	loadSubFromPath(selectedSubPath)
 	HSPlayer.play()
 	MainMenuUI.visible = false
 	
 	
+func setAudioPath(path):
+	selectedAudioPath = path
+	MP3SelectedLabel.text = "Loaded file:\n" + path
 
-func setFilePath(path):
-	selectedFilePath = path
-	FileSelectedLabel.text = "Loaded file:\n"+path
+func setSubPath(path):
+	selectedSubPath = path
+	SubSelectedLabel.text = "Loaded file:\n" + path
 
-func loadFromPath(path):
+func loadAudioFromPath(path):
 	match path.right(3).to_lower():
 		"ogg":
 			HSPlayer.stream = AudioStreamOggVorbis.load_from_file(path)
@@ -50,6 +59,17 @@ func loadFromPath(path):
 			HSPlayer.stream = mp3
 		_:
 			print("unexpected file type")
+
+func loadSubFromPath(path):
+	if path.right(3).to_lower() == "txt":
+		var file = FileAccess.open(path, FileAccess.READ)
+		var text = file.get_as_text()
+		var list = text.split("\n")
+		print(list)
+		SubLabel.list = list
+		SubLabel.text = list[0]
+	else:
+		print("unexpected file type")
 
 	
 func gotoMainMenu():
