@@ -10,6 +10,8 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if list.is_empty():
+		return
 	time_since_change += delta;
 	set_self_modulate(get_self_modulate() - Color8(0, 0, 0, 40));
 	if time_since_change > 0.15:

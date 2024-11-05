@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bn0r4wfmhf0lh"]
+
+[ext_resource type="Script" path="res://Scripts/SessionElement_Subliminal.gd" id="1_t1tjn"]
+
+[node name="Node" type="Node"]
+script = ExtResource("1_t1tjn")

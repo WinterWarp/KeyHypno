@@ -5,3 +5,6 @@
 *.tmp
 *.exe
 *.pck
+*.mp3
+*.import
+*.hypsav
