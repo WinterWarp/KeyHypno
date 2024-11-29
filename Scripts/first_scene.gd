@@ -12,8 +12,12 @@ var HypnoScene: Node2D
 var HSPlayer: AudioStreamPlayer2D
 var SubLabel
 
+var editing_scene_res : Resource
+var editing_scene : EditingScene
+
 
 const HYPNO_SCENE_PATH = "res://Scenes/HypnoScene.tscn"
+const EDITING_SCENE_PATH = "res://Scenes/EditingScene.tscn"
 
 func _ready():
 	MainMenuUI = $MainMenuUI
@@ -21,6 +25,7 @@ func _ready():
 	SubSelectedLabel = $MainMenuUI/SubSelectedLabel
 	SceneContainer = $SceneContainer
 	ResourceLoader.load_threaded_request(HYPNO_SCENE_PATH)
+	ResourceLoader.load_threaded_request(EDITING_SCENE_PATH)
 	
 func startHypno():
 	if SceneContainer.get_child_count() == 0:
@@ -38,7 +43,17 @@ func startHypno():
 	loadSubFromPath(selectedSubPath)
 	HSPlayer.play()
 	MainMenuUI.visible = false
+	HypnoScene.active_session_data = $SessionData
+	HypnoScene.active_session_data.begin_session()
+	HypnoScene.HSCanvasLayer.session_data = $SessionData
 	
+func start_editing():
+	editing_scene_res = ResourceLoader.load_threaded_get(EDITING_SCENE_PATH)
+	editing_scene = editing_scene_res.instantiate()
+	editing_scene.open_session_data = $SessionData
+	$EditingSceneContainer.add_child(editing_scene)
+	editing_scene.set_visibility(true)
+	MainMenuUI.visible = false
 	
 func setAudioPath(path):
 	selectedAudioPath = path
@@ -73,10 +88,12 @@ func loadSubFromPath(path):
 
 	
 func gotoMainMenu():
-	HypnoScene.set_visibility(false)
+	if(HypnoScene):
+		HypnoScene.set_visibility(false)
+	editing_scene.set_visibility(false)
 	MainMenuUI.visible = true
 	print(SceneContainer.get_child_count(), " ", SceneContainer.get_children())
-	SceneContainer.get_child(0).visible = false
+	#SceneContainer.get_child(0).visible = false
 	
 func exit():
 	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
@@ -91,3 +108,32 @@ func _on_begin_hypnosis_pressed():
 	
 func _on_play_finished():
 	gotoMainMenu()
+
+func _on_begin_editing_button_pressed():
+	start_editing()
+
+
+func _on_editing_scene_container_hidden() -> void:
+	gotoMainMenu()
+
+
+func _on_demo_session_1_button_pressed() -> void:
+	var session_data : SessionData = $SessionData
+	session_data.reset_and_clear()
+	var new_subliminal : SessionElement_Subliminal
+
+	new_subliminal = session_data.add_element_of_class(session_data.SubliminalClass)
+	new_subliminal._start_time = 0.0
+	new_subliminal._end_time = 5.0
+	new_subliminal._time_per_message = 1.0
+	new_subliminal._messages.append("Message1")
+	new_subliminal._messages.append("Message2")
+	new_subliminal._messages.append("Message3")
+	
+	new_subliminal = session_data.add_element_of_class(session_data.SubliminalClass)
+	new_subliminal._start_time = 5.0
+	new_subliminal._end_time = 10.0
+	new_subliminal._time_per_message = 0.5
+	new_subliminal._messages.append("Message4")
+	new_subliminal._messages.append("Message5")
+	new_subliminal._messages.append("Message6")
