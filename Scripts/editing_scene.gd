@@ -6,6 +6,7 @@ var open_session_data : SessionData
 var SubliminalClass = preload("res://Scripts/SessionElement_Subliminal.gd")
 
 func set_visibility(is_visible: bool):
+	show()
 	$CanvasLayer.visible = is_visible
 
 
@@ -19,9 +20,4 @@ func _on_add_subliminal_button_pressed() -> void:
 
 
 func _on_back_to_menu_button_pressed() -> void:
-	print(self)
-	print(get_parent())
-	print(get_parent().get_parent())
-	print(get_parent().visible)
-	get_parent().hide()
-	print(get_parent().visible)
+	hide()

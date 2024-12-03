@@ -33,7 +33,7 @@ grow_horizontal = 0
 text = "Back to Menu
 "
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="CanvasLayer"]
 offset_left = 435.0
 offset_top = 523.0
 offset_right = 567.0

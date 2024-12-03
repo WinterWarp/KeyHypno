@@ -84,19 +84,17 @@ offset_right = 947.0
 offset_bottom = 363.0
 text = "Edit Session"
 
-[node name="SceneContainer" type="Node2D" parent="."]
-
-[node name="EditingSceneContainer" type="Node2D" parent="."]
-
-[node name="SessionData" type="Node" parent="."]
-script = ExtResource("4_p33wf")
-
-[node name="DemoSession1Button" type="Button" parent="."]
+[node name="DemoSession1Button" type="Button" parent="MainMenuUI"]
 offset_left = 74.0
 offset_top = 291.0
 offset_right = 246.0
 offset_bottom = 341.0
 text = "Load Demo Session 1"
+
+[node name="SceneContainer" type="Node2D" parent="."]
+
+[node name="SessionData" type="Node" parent="."]
+script = ExtResource("4_p33wf")
 
 [connection signal="file_selected" from="MainMenuUI/SelectAndPlayAudio" to="MainMenuUI/SelectAndPlayAudio" method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="MainMenuUI/BeginHypnosisButton" to="." method="_on_begin_hypnosis_pressed"]
@@ -104,5 +102,4 @@ text = "Load Demo Session 1"
 [connection signal="pressed" from="MainMenuUI/SubFileButton" to="MainMenuUI/SelectSubFile" method="_on_load_file_pressed"]
 [connection signal="file_selected" from="MainMenuUI/SelectSubFile" to="MainMenuUI/SelectSubFile" method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="MainMenuUI/BeginEditingButton" to="." method="_on_begin_editing_button_pressed"]
-[connection signal="hidden" from="EditingSceneContainer" to="." method="_on_editing_scene_container_hidden"]
-[connection signal="pressed" from="DemoSession1Button" to="." method="_on_demo_session_1_button_pressed"]
+[connection signal="pressed" from="MainMenuUI/DemoSession1Button" to="." method="_on_demo_session_1_button_pressed"]
