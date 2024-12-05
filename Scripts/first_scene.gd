@@ -169,6 +169,7 @@ func load_hypsav(session_data: SessionData, data: String) -> void:
 		match e["type"]:
 			"SUBLIMINAL":
 				var s = session_data.add_element_of_class(session_data.SubliminalClass)
+				s._type = "SUBLIMINAL"
 				s._start_time = e["start_time"]
 				s._end_time = e["end_time"]
 				s._time_per_message = e["time_per_message"]
@@ -176,6 +177,27 @@ func load_hypsav(session_data: SessionData, data: String) -> void:
 					s._messages.append(line)
 			_:
 				print("invalid event type" + e.type)
+	#create_hypsav(session_data)
+
+
+func create_hypsav(session_data: SessionData) -> String:
+	var sav = []
+	for e in session_data._elements:
+		match e._type:
+			"SUBLIMINAL":
+				sav.append(
+					{
+						"type": e._type,
+						"start_time": e._start_time,
+						"end_time": e._end_time,
+						"time_per_message": e._time_per_message,
+						"messages": e._messages
+					}
+				)
+			_:
+				print("invalid event type" + e._type)
+
+	return encode(sav)
 
 
 func _on_demo_session_1_button_pressed() -> void:
