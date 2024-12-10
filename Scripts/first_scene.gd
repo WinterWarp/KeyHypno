@@ -3,9 +3,11 @@ extends Node2D
 var main_menu_ui: CanvasLayer
 var MP3SelectedLabel: Label
 var SubSelectedLabel: Label
+var SessionSelectedLabel: Label
 var scene_container: Node2D
 var selectedAudioPath: String
 var selectedSubPath: String
+var selectedSessionPath: String
 
 var hypno_scene_res: Resource
 var hypno_scene: Node2D
@@ -23,6 +25,7 @@ func _ready():
 	main_menu_ui = $MainMenuUI
 	MP3SelectedLabel = $MainMenuUI/MP3SelectedLabel
 	SubSelectedLabel = $MainMenuUI/SubSelectedLabel
+	SessionSelectedLabel = $MainMenuUI/SessionSelectedLabel
 	scene_container = $SceneContainer
 	ResourceLoader.load_threaded_request(HYPNO_SCENE_PATH)
 	ResourceLoader.load_threaded_request(EDITING_SCENE_PATH)
@@ -65,6 +68,15 @@ func setAudioPath(path):
 func setSubPath(path):
 	selectedSubPath = path
 	SubSelectedLabel.text = "Loaded file:\n" + path
+
+
+func setSessionPath(path):
+	selectedSessionPath = path
+	var session_data: SessionData = $SessionData
+	var file = FileAccess.open(selectedSessionPath, FileAccess.READ)
+	var text = file.get_as_text()
+	load_hypsav(session_data, text)
+	SessionSelectedLabel.text = "Loaded file:\n" + path.get_file()  # don't clobber up the label with a really long path
 
 
 func load_audio_from_path(path: String):
@@ -198,10 +210,3 @@ func create_hypsav(session_data: SessionData) -> String:
 				print("invalid event type" + e._type)
 
 	return encode(sav)
-
-
-func _on_demo_session_1_button_pressed() -> void:
-	var session_data: SessionData = $SessionData
-	var file = FileAccess.open("res://Scripts/DemoSession1.hypsav", FileAccess.READ)
-	var text = file.get_as_text()
-	load_hypsav(session_data, text)
