@@ -1,17 +1,14 @@
 extends Node2D
 
 var main_menu_ui: CanvasLayer
-var MP3SelectedLabel: Label
-var SubSelectedLabel: Label
 var SessionSelectedLabel: Label
 var scene_container: Node2D
-var selectedAudioPath: String
-var selectedSubPath: String
 var selectedSessionPath: String
+var reader: ZIPReader
 
 var hypno_scene_res: Resource
 var hypno_scene: Node2D
-var hypno_scene_audio_player: AudioStreamPlayer2D
+var hypno_scene_audio_player: AudioStreamPlayer
 var hypno_scene_subliminal_label: Label
 
 var editing_scene_res: Resource
@@ -23,8 +20,6 @@ const EDITING_SCENE_PATH = "res://Scenes/EditingScene.tscn"
 
 func _ready():
 	main_menu_ui = $MainMenuUI
-	MP3SelectedLabel = $MainMenuUI/MP3SelectedLabel
-	SubSelectedLabel = $MainMenuUI/SubSelectedLabel
 	SessionSelectedLabel = $MainMenuUI/SessionSelectedLabel
 	scene_container = $SceneContainer
 	ResourceLoader.load_threaded_request(HYPNO_SCENE_PATH)
@@ -41,11 +36,9 @@ func start_hypno():
 		hypno_scene_audio_player.finished.connect(_on_play_finished)
 		hypno_scene.hidden.connect(_on_hypno_scene_hidden)
 	hypno_scene.set_visibility(true)
-	load_audio_from_path(selectedAudioPath)
-	load_subliminal_from_path(selectedSubPath)
-	hypno_scene_audio_player.play()
 	main_menu_ui.visible = false
 	hypno_scene.active_session_data = $SessionData
+	hypno_scene.zip_reader = reader
 	hypno_scene.begin_session()
 
 
@@ -60,52 +53,16 @@ func start_editing():
 	main_menu_ui.visible = false
 
 
-func setAudioPath(path):
-	selectedAudioPath = path
-	MP3SelectedLabel.text = "Loaded file:\n" + path
-
-
-func setSubPath(path):
-	selectedSubPath = path
-	SubSelectedLabel.text = "Loaded file:\n" + path
-
-
 func setSessionPath(path):
 	selectedSessionPath = path
 	var session_data: SessionData = $SessionData
-	var file = FileAccess.open(selectedSessionPath, FileAccess.READ)
-	var text = file.get_as_text()
-	load_hypsav(session_data, text)
+	reader = ZIPReader.new()
+	reader.open(selectedSessionPath)
+	var files = reader.get_files()
+	files.sort()
+	print(files)
+	load_hypsav(session_data, reader)
 	SessionSelectedLabel.text = "Loaded file:\n" + path.get_file()  # don't clobber up the label with a really long path
-
-
-func load_audio_from_path(path: String):
-	if path.is_empty():
-		return
-	match path.right(3).to_lower():
-		"ogg":
-			hypno_scene_audio_player.stream = AudioStreamOggVorbis.load_from_file(path)
-		"mp3":
-			var file = FileAccess.open(path, FileAccess.READ)
-			var mp3 = AudioStreamMP3.new()
-			mp3.data = file.get_buffer(file.get_length())
-			hypno_scene_audio_player.stream = mp3
-		_:
-			print("unexpected file type")
-
-
-func load_subliminal_from_path(path: String):
-	if path.is_empty():
-		return
-	if path.right(3).to_lower() == "txt":
-		var file = FileAccess.open(path, FileAccess.READ)
-		var text = file.get_as_text()
-		var list = text.split("\n")
-		print(list)
-		hypno_scene_subliminal_label.list = list
-		hypno_scene_subliminal_label.text = list[0]
-	else:
-		print("unexpected file type")
 
 
 func go_to_main_menu():
@@ -174,7 +131,8 @@ func encode(data: Array) -> String:
 	return JSON.stringify(data)
 
 
-func load_hypsav(session_data: SessionData, data: String) -> void:
+func load_hypsav(session_data: SessionData, zip_reader: ZIPReader) -> void:
+	var data = zip_reader.read_file("session.hypsav").get_string_from_utf8()
 	session_data.reset_and_clear()
 	var sav = decode(data)
 	for e in sav:
@@ -187,6 +145,12 @@ func load_hypsav(session_data: SessionData, data: String) -> void:
 				s._time_per_message = e["time_per_message"]
 				for line in e["messages"]:
 					s._messages.append(line)
+			"AUDIO":
+				var s = session_data.add_element_of_class(session_data.AudioClass)
+				s._type = "AUDIO"
+				s._start_time = e["start_time"]
+				s._end_time = e["end_time"]
+				s.path = e["path"]
 			_:
 				print("invalid event type" + e.type)
 	#create_hypsav(session_data)
@@ -204,6 +168,15 @@ func create_hypsav(session_data: SessionData) -> String:
 						"end_time": e._end_time,
 						"time_per_message": e._time_per_message,
 						"messages": e._messages
+					}
+				)
+			"AUDIO":
+				sav.append(
+					{
+						"type": e._type,
+						"start_time": e._start_time,
+						"end_time": e._end_time,
+						"path": e.path
 					}
 				)
 			_:
