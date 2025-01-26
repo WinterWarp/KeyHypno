@@ -49,6 +49,7 @@ func start_editing():
 		scene_container.add_child(editing_scene)
 		editing_scene.hidden.connect(_on_editing_scene_hidden)
 	editing_scene.open_session_data = $SessionData
+	editing_scene.refresh()
 	editing_scene.set_visibility(true)
 	main_menu_ui.visible = false
 
@@ -136,20 +137,28 @@ func load_hypsav(session_data: SessionData, zip_reader: ZIPReader) -> void:
 	session_data.reset_and_clear()
 	var sav = decode(data)
 	for e in sav:
+		var s
 		match e["type"]:
 			"SUBLIMINAL":
-				var s = session_data.add_element_of_class(session_data.SubliminalClass)
-				s._type = "SUBLIMINAL"
-				s._start_time = e["start_time"]
-				s._end_time = e["end_time"]
-				s._time_per_message = e["time_per_message"]
+				s = session_data.add_element_of_class(session_data.SubliminalClass)
+			"AUDIO":
+				s = session_data.add_element_of_class(session_data.AudioClass)
+			_:
+				print("invalid event type" + e.type)
+				return
+		s._type = e["type"]
+		if e.has("display_name"):
+			s._display_name.set_value(e["display_name"])
+		else:
+			session_data.assign_unique_default_display_name_to_element(s)
+		s._start_time.set_value(e["start_time"])
+		s._end_time.set_value(e["end_time"])
+		match s._type:
+			"SUBLIMINAL":
+				s._time_per_message.set_value(e["time_per_message"])
 				for line in e["messages"]:
 					s._messages.append(line)
 			"AUDIO":
-				var s = session_data.add_element_of_class(session_data.AudioClass)
-				s._type = "AUDIO"
-				s._start_time = e["start_time"]
-				s._end_time = e["end_time"]
 				s.path = e["path"]
 			_:
 				print("invalid event type" + e.type)
@@ -164,9 +173,9 @@ func create_hypsav(session_data: SessionData) -> String:
 				sav.append(
 					{
 						"type": e._type,
-						"start_time": e._start_time,
-						"end_time": e._end_time,
-						"time_per_message": e._time_per_message,
+						"start_time": e.get_start_time(),
+						"end_time": e.get_end_time(),
+						"time_per_message": e.get_time_per_message(),
 						"messages": e._messages
 					}
 				)
@@ -174,8 +183,8 @@ func create_hypsav(session_data: SessionData) -> String:
 				sav.append(
 					{
 						"type": e._type,
-						"start_time": e._start_time,
-						"end_time": e._end_time,
+						"start_time": e.get_start_time(),
+						"end_time": e.get_end_time(),
 						"path": e.path
 					}
 				)

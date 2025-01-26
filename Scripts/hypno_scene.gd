@@ -13,17 +13,15 @@ func _ready():
 	HSControl = $Control
 
 
-func set_visibility(is_visible: bool):
+func set_visibility(in_is_visible: bool):
 	show()
-	_canvas.visible = is_visible
-	HSControl.visible = is_visible
+	_canvas.visible = in_is_visible
+	HSControl.visible = in_is_visible
 
 
 func begin_session():
 	if active_session_data == null:
 		return
-	else:
-		active_session_data._paused = false
 	_canvas.session_data = active_session_data
 	_canvas.zip_reader = zip_reader
 	active_session_data.begin_session()

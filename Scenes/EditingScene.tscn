@@ -3,22 +3,16 @@
 [ext_resource type="Script" path="res://Scripts/editing_scene.gd" id="1_lwjxk"]
 
 [node name="Node2D" type="Node2D"]
+position = Vector2(407, 55)
 script = ExtResource("1_lwjxk")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="AddSubliminalButton" type="Button" parent="CanvasLayer"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -118.0
-offset_top = -67.0
-offset_right = -36.0
-offset_bottom = -31.0
-grow_horizontal = 2
-grow_vertical = 0
+offset_left = 57.0
+offset_top = 537.0
+offset_right = 186.0
+offset_bottom = 573.0
 text = "New Subliminal"
 
 [node name="BackToMenuButton" type="Button" parent="CanvasLayer"]
@@ -33,12 +27,58 @@ grow_horizontal = 0
 text = "Back to Menu
 "
 
-[node name="Button" type="Button" parent="CanvasLayer"]
-offset_left = 435.0
-offset_top = 523.0
-offset_right = 567.0
-offset_bottom = 572.0
-text = "Load Subliminal"
+[node name="ListOfElementsInSession" type="ItemList" parent="CanvasLayer"]
+offset_left = 58.0
+offset_top = 36.0
+offset_right = 247.0
+offset_bottom = 512.0
+
+[node name="EditElementRootContainer" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 407.0
+offset_top = 55.0
+offset_right = 663.0
+offset_bottom = 416.0
+
+[node name="EditElementGridContainer" type="GridContainer" parent="CanvasLayer/EditElementRootContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/EditElementRootContainer/EditElementGridContainer"]
+layout_mode = 2
+text = "Property:"
+
+[node name="LineEdit" type="LineEdit" parent="CanvasLayer/EditElementRootContainer/EditElementGridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "12345"
+
+[node name="Label2" type="Label" parent="CanvasLayer/EditElementRootContainer/EditElementGridContainer"]
+layout_mode = 2
+text = "Property:"
+
+[node name="LineEdit2" type="LineEdit" parent="CanvasLayer/EditElementRootContainer/EditElementGridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "12345"
+
+[node name="Label3" type="Label" parent="CanvasLayer/EditElementRootContainer/EditElementGridContainer"]
+layout_mode = 2
+text = "Property:"
+
+[node name="LineEdit3" type="LineEdit" parent="CanvasLayer/EditElementRootContainer/EditElementGridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "12345"
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/EditElementRootContainer"]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Button" type="Button" parent="CanvasLayer/EditElementRootContainer"]
+layout_mode = 2
+text = "Delete Element"
 
 [connection signal="pressed" from="CanvasLayer/AddSubliminalButton" to="." method="_on_add_subliminal_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/BackToMenuButton" to="." method="_on_back_to_menu_button_pressed"]
+[connection signal="item_selected" from="CanvasLayer/ListOfElementsInSession" to="." method="_on_list_of_elements_in_session_item_selected"]

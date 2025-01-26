@@ -13,7 +13,7 @@ func _ready():
 	debug_label = $DebugLabel
 
 
-func _process(delta: float):
+func _process(_delta: float):
 	if session_data != null:
 		draw_session()
 
