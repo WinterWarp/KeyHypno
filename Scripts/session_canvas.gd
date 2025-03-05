@@ -5,6 +5,8 @@ var zip_reader: ZIPReader
 var player: AudioStreamPlayer
 var subliminal_label: Label
 var debug_label: Label
+@onready
+var interact_label: Label = $InteractLabel
 
 
 func _ready():
@@ -20,6 +22,7 @@ func _process(_delta: float):
 
 func draw_session():
 	var active_elements: Array[SessionElement] = session_data.get_active_elements()
+	
 	var active_subliminals = active_elements.filter(
 		func(element: SessionElement): return element is SessionElement_Subliminal
 	)
@@ -28,6 +31,7 @@ func draw_session():
 	else:
 		subliminal_label.visible = true
 		subliminal_label.text = active_subliminals[0].get_current_message()
+		
 	var active_audio = active_elements.filter(
 		func(element: SessionElement): return element is SessionElement_Audio
 	)
@@ -35,6 +39,25 @@ func draw_session():
 		player.play_path(zip_reader, "")
 	elif active_audio.size() > 0 && active_audio[0].path != player.path && !session_data._paused:
 		player.play_path(zip_reader, active_audio[0].path)
+		
+	var active_interacts = active_elements.filter(
+		func(element: SessionElement): return element is SessionElement_Interact
+	)
+	if active_interacts.is_empty():
+		interact_label.visible = false
+	else:
+		var awaited_interact: ButtonInteract = active_interacts[0].get_awaited_interact()
+		if awaited_interact == null:
+			interact_label.visible = false
+		else:
+			interact_label.visible = true
+			var key_string: String = OS.get_keycode_string(awaited_interact.get_bound_key())
+			var hold_time: float = awaited_interact.get_hold_time()
+			if hold_time > 0.0:
+				interact_label.text = "Hold the " + key_string + " key for " + str(hold_time) + " seconds."
+			else:
+				interact_label.text = "Press the " + key_string + " key."
+	
 	var debug_string: String = "%s" % session_data._global_time
 	debug_label.text = debug_string
 
@@ -43,3 +66,11 @@ func draw_session():
 	#draw_subliminal(session_element)
 
 #func draw_subliminal(var subliminal : SessionElement):
+
+func _input(event: InputEvent) -> void:
+	if session_data == null:
+		return
+		
+	for active_element: SessionElement in session_data.get_active_elements():
+		active_element._input(event)
+	

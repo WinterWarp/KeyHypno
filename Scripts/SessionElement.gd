@@ -65,7 +65,7 @@ func is_element_active():
 	
 
 func get_default_display_name() -> String:
-	return "Subliminal"
+	return "Element"
 	
 	
 func _handle_display_name_value_changed(old_value: String, new_value: String) -> void:
@@ -78,3 +78,6 @@ func debug_print() -> void:
 	print("_end_time: " + str(_end_time.get_value()))
 	print("_local_time: " + str(_local_time))
 	print("_is_active: " + str(_is_active))
+	
+func _input(event: InputEvent) -> void:
+	pass

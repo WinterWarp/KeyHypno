@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://br4jmmu48sjyr"]
+
+[ext_resource type="Script" path="res://Scripts/interaction_key_edit_pane.gd" id="1_41ox1"]
+[ext_resource type="Script" path="res://Scripts/FloatPropLineEdit.gd" id="2_ewies"]
+
+[node name="InteractionKeyEditPane" type="VBoxContainer"]
+offset_right = 185.0
+offset_bottom = 66.0
+script = ExtResource("1_41ox1")
+
+[node name="KeyContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="KeyLabel" type="Label" parent="KeyContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Key: A"
+
+[node name="BindKeyButton" type="Button" parent="KeyContainer"]
+layout_mode = 2
+text = "Bind
+"
+
+[node name="DeleteButton" type="Button" parent="KeyContainer"]
+layout_mode = 2
+text = "Delete
+"
+
+[node name="HoldContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HoldLabel" type="Label" parent="HoldContainer"]
+layout_mode = 2
+text = "Hold Duration:"
+
+[node name="HoldDurationLineEdit" type="LineEdit" parent="HoldContainer"]
+layout_mode = 2
+script = ExtResource("2_ewies")
+
+[connection signal="pressed" from="KeyContainer/BindKeyButton" to="." method="_on_bind_key_button_pressed"]
+[connection signal="pressed" from="KeyContainer/DeleteButton" to="." method="_on_delete_button_pressed"]

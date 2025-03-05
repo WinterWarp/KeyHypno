@@ -10,6 +10,12 @@ var _currently_editing_element: SessionElement
 var _currently_editing_index: int
 
 var SubliminalClass = preload("res://Scripts/SessionElement_Subliminal.gd")
+var InteractClass = preload("res://Scripts/SessionElement_Interact.gd")
+var SessionElementInteractEditPaneScene = preload("res://Scenes/SessionElement_Interact_EditPane.tscn")
+
+@onready
+var _canvas_layer: CanvasLayer = $CanvasLayer
+
 
 func _ready():
 	_list_of_elements_in_session = $CanvasLayer/ListOfElementsInSession
@@ -28,11 +34,22 @@ func refresh():
 
 func set_visibility(in_is_visible: bool):
 	show()
-	$CanvasLayer.visible = in_is_visible
+	_canvas_layer.visible = in_is_visible
+
+
+func is_scene_active() -> bool:
+	return _canvas_layer.visible
 
 
 func _on_add_subliminal_button_pressed() -> void:
 	var new_element: SessionElement_Subliminal = SubliminalClass.new()
+	open_session_data.assign_unique_default_display_name_to_element(new_element)
+	open_session_data.add_element(new_element)
+	_add_element_to_display_list(new_element)
+
+
+func _on_add_interact_button_pressed() -> void:
+	var new_element: SessionElement_Interact = InteractClass.new()
 	open_session_data.assign_unique_default_display_name_to_element(new_element)
 	open_session_data.add_element(new_element)
 	_add_element_to_display_list(new_element)
@@ -87,6 +104,11 @@ func _populate_edit_container_for_element(element: SessionElement) -> void:
 		_subliminal_messages_editor.size_flags_horizontal = 0
 		_subliminal_messages_editor.text_changed.connect(_handle_subliminal_messages_editor_text_changed)
 		_edit_element_root_container.add_child(_subliminal_messages_editor)
+	else: if _currently_editing_element is SessionElement_Interact:
+		var interact_edit_pane = SessionElementInteractEditPaneScene.instantiate()
+		_edit_element_root_container.add_child(interact_edit_pane)
+		interact_edit_pane.set_editing_element(_currently_editing_element)
+
 	
 	var delete_button: Button = Button.new()
 	delete_button.text = "Delete Element"

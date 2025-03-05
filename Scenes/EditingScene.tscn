@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcuw6mx1gt4su"]
+[gd_scene load_steps=3 format=3 uid="uid://dcuw6mx1gt4su"]
 
 [ext_resource type="Script" path="res://Scripts/editing_scene.gd" id="1_lwjxk"]
+[ext_resource type="PackedScene" uid="uid://br4jmmu48sjyr" path="res://Scenes/InteractionKeyEditPane.tscn" id="2_u403d"]
 
 [node name="Node2D" type="Node2D"]
 position = Vector2(407, 55)
@@ -14,6 +15,13 @@ offset_top = 537.0
 offset_right = 186.0
 offset_bottom = 573.0
 text = "New Subliminal"
+
+[node name="AddInteractButton" type="Button" parent="CanvasLayer"]
+offset_left = 57.0
+offset_top = 577.0
+offset_right = 186.0
+offset_bottom = 613.0
+text = "New Interact"
 
 [node name="BackToMenuButton" type="Button" parent="CanvasLayer"]
 anchors_preset = 1
@@ -70,6 +78,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "12345"
 
+[node name="Control" parent="CanvasLayer/EditElementRootContainer" instance=ExtResource("2_u403d")]
+layout_mode = 2
+
 [node name="TextEdit" type="TextEdit" parent="CanvasLayer/EditElementRootContainer"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
@@ -79,6 +90,10 @@ size_flags_horizontal = 0
 layout_mode = 2
 text = "Delete Element"
 
+[node name="Control2" parent="CanvasLayer/EditElementRootContainer" instance=ExtResource("2_u403d")]
+layout_mode = 2
+
 [connection signal="pressed" from="CanvasLayer/AddSubliminalButton" to="." method="_on_add_subliminal_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/AddInteractButton" to="." method="_on_add_interact_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/BackToMenuButton" to="." method="_on_back_to_menu_button_pressed"]
 [connection signal="item_selected" from="CanvasLayer/ListOfElementsInSession" to="." method="_on_list_of_elements_in_session_item_selected"]

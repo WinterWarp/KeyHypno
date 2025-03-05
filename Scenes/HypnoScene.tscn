@@ -43,6 +43,21 @@ offset_bottom = 63.0
 grow_horizontal = 0
 text = "Main Menu"
 
+[node name="InteractLabel" type="Label" parent="SessionCanvas"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -139.0
+offset_top = 62.0
+offset_right = 142.0
+offset_bottom = 85.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press the A key"
+horizontal_alignment = 1
+
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0

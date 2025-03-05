@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://fnhhktunrgt0"]
+
+[ext_resource type="Script" path="res://Scripts/session_element_interact_edit_pane.gd" id="1_xleit"]
+[ext_resource type="PackedScene" uid="uid://br4jmmu48sjyr" path="res://Scenes/InteractionKeyEditPane.tscn" id="2_6i558"]
+
+[node name="InteractEditPane" type="VBoxContainer"]
+offset_right = 185.0
+offset_bottom = 66.0
+script = ExtResource("1_xleit")
+
+[node name="InteractionKeyContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SingleKey" parent="InteractionKeyContainer" instance=ExtResource("2_6i558")]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="InteractionKeyContainer"]
+layout_mode = 2
+
+[node name="SingleKey2" parent="InteractionKeyContainer" instance=ExtResource("2_6i558")]
+layout_mode = 2

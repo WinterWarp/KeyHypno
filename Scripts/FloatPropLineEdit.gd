@@ -29,6 +29,9 @@ func _handle_text_submitted(_new_text: String) -> void:
 	
 	
 func _update_from_text() -> void:
+	if _property_reference == null:
+		return
+	
 	_property_reference.set_value(text.to_float())
 	# Update the text according to the value we parsed from the entered string.
 	# So if the entered text wasn't a valid float, we "snap back" to having a float in the text box.

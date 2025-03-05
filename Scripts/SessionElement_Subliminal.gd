@@ -80,6 +80,10 @@ func load_file(path):
 	print("packed array: ", content_packed_array.size())
 	for packed_string in content_packed_array:
 		_messages.append(packed_string)
+	
+
+func get_default_display_name() -> String:
+	return "Subliminal"
 
 
 func debug_print() -> void:

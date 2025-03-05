@@ -22,11 +22,14 @@ func _process(delta: float) -> void:
 	if _paused:
 		return
 	var old_global_time: float = _global_time
-	_global_time += delta
+	var time_advancing: bool = _should_time_advance()
+	if time_advancing:
+		_global_time += delta
 	var has_incomplete_element: bool = false
 	for element: SessionElement in _elements:
 		if element.is_element_active():
-			element._process_element(delta)
+			if time_advancing || element is SessionElement_Interact:
+				element._process_element(delta)
 		else:
 			if (
 				old_global_time <= element.get_start_time()
@@ -100,6 +103,13 @@ func _update_display_name_until_unique(element: SessionElement, preferred_name: 
 		if !is_element_name_in_use(chosen_name, element):
 			return chosen_name
 	return ""
+
+
+func _should_time_advance() -> bool:
+	for element: SessionElement in _elements:
+		if element.is_element_active() && element is SessionElement_Interact:
+			return false
+	return true
 	
 	
 func debug_print() -> void:
