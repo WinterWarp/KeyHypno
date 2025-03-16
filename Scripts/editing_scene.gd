@@ -11,7 +11,9 @@ var _currently_editing_index: int
 
 var SubliminalClass = preload("res://Scripts/SessionElement_Subliminal.gd")
 var InteractClass = preload("res://Scripts/SessionElement_Interact.gd")
+var AudioClass = preload("res://Scripts/SessionElement_Audio.gd")
 var SessionElementInteractEditPaneScene = preload("res://Scenes/SessionElement_Interact_EditPane.tscn")
+var SessionElementAudioEditPaneScene = preload("res://Scenes/SessionElement_Audio_EditPane.tscn")
 
 @onready
 var _canvas_layer: CanvasLayer = $CanvasLayer
@@ -43,16 +45,26 @@ func is_scene_active() -> bool:
 
 func _on_add_subliminal_button_pressed() -> void:
 	var new_element: SessionElement_Subliminal = SubliminalClass.new()
-	open_session_data.assign_unique_default_display_name_to_element(new_element)
-	open_session_data.add_element(new_element)
-	_add_element_to_display_list(new_element)
+	_set_up_new_element(new_element)
 
 
 func _on_add_interact_button_pressed() -> void:
 	var new_element: SessionElement_Interact = InteractClass.new()
+	_set_up_new_element(new_element)
+
+
+func _on_add_audio_button_pressed() -> void:
+	var new_element: SessionElement_Audio = AudioClass.new()
+	_set_up_new_element(new_element)
+
+
+func _set_up_new_element(new_element: SessionElement) -> void:
 	open_session_data.assign_unique_default_display_name_to_element(new_element)
 	open_session_data.add_element(new_element)
 	_add_element_to_display_list(new_element)
+	var new_index: int = _list_of_elements_in_session.item_count - 1
+	_list_of_elements_in_session.select(new_index)
+	_on_list_of_elements_in_session_item_selected(new_index)
 
 
 func _on_back_to_menu_button_pressed() -> void:
@@ -108,6 +120,10 @@ func _populate_edit_container_for_element(element: SessionElement) -> void:
 		var interact_edit_pane = SessionElementInteractEditPaneScene.instantiate()
 		_edit_element_root_container.add_child(interact_edit_pane)
 		interact_edit_pane.set_editing_element(_currently_editing_element)
+	else: if _currently_editing_element is SessionElement_Audio:
+		var audio_edit_pane = SessionElementAudioEditPaneScene.instantiate()
+		_edit_element_root_container.add_child(audio_edit_pane)
+		audio_edit_pane.set_editing_element(_currently_editing_element)
 
 	
 	var delete_button: Button = Button.new()

@@ -9,20 +9,6 @@ script = ExtResource("1_lwjxk")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="AddSubliminalButton" type="Button" parent="CanvasLayer"]
-offset_left = 57.0
-offset_top = 537.0
-offset_right = 186.0
-offset_bottom = 573.0
-text = "New Subliminal"
-
-[node name="AddInteractButton" type="Button" parent="CanvasLayer"]
-offset_left = 57.0
-offset_top = 577.0
-offset_right = 186.0
-offset_bottom = 613.0
-text = "New Interact"
-
 [node name="BackToMenuButton" type="Button" parent="CanvasLayer"]
 anchors_preset = 1
 anchor_left = 1.0
@@ -39,7 +25,7 @@ text = "Back to Menu
 offset_left = 58.0
 offset_top = 36.0
 offset_right = 247.0
-offset_bottom = 512.0
+offset_bottom = 489.0
 
 [node name="EditElementRootContainer" type="VBoxContainer" parent="CanvasLayer"]
 offset_left = 407.0
@@ -93,7 +79,26 @@ text = "Delete Element"
 [node name="Control2" parent="CanvasLayer/EditElementRootContainer" instance=ExtResource("2_u403d")]
 layout_mode = 2
 
-[connection signal="pressed" from="CanvasLayer/AddSubliminalButton" to="." method="_on_add_subliminal_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/AddInteractButton" to="." method="_on_add_interact_button_pressed"]
+[node name="NewElementButtonContainer" type="VBoxContainer" parent="."]
+offset_left = -324.0
+offset_top = 454.0
+offset_right = -190.0
+offset_bottom = 555.0
+
+[node name="AddSubliminalButton" type="Button" parent="NewElementButtonContainer"]
+layout_mode = 2
+text = "New Subliminal"
+
+[node name="AddInteractButton" type="Button" parent="NewElementButtonContainer"]
+layout_mode = 2
+text = "New Interact"
+
+[node name="AddAudioButton" type="Button" parent="NewElementButtonContainer"]
+layout_mode = 2
+text = "New Audio"
+
 [connection signal="pressed" from="CanvasLayer/BackToMenuButton" to="." method="_on_back_to_menu_button_pressed"]
 [connection signal="item_selected" from="CanvasLayer/ListOfElementsInSession" to="." method="_on_list_of_elements_in_session_item_selected"]
+[connection signal="pressed" from="NewElementButtonContainer/AddSubliminalButton" to="." method="_on_add_subliminal_button_pressed"]
+[connection signal="pressed" from="NewElementButtonContainer/AddInteractButton" to="." method="_on_add_interact_button_pressed"]
+[connection signal="pressed" from="NewElementButtonContainer/AddAudioButton" to="." method="_on_add_audio_button_pressed"]

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://c8gs40oabj372"]
+
+[node name="AudioFileSelect" type="FileDialog"]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(700, 400)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.mp3", "*.ogg")

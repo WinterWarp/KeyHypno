@@ -10,3 +10,7 @@ func _process_element(delta: float):
 	if !StillRunning:
 		return false
 	return true
+	
+
+func get_default_display_name() -> String:
+	return "Audio"
