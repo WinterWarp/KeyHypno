@@ -1,7 +1,6 @@
 class_name SessionElement
 extends RefCounted
 
-var _type: String = ""
 var _display_name: StringObj = StringObj.new("")
 var _start_time: FloatObj = FloatObj.new(0.0)
 var _end_time: FloatObj = FloatObj.new(-1.0)
@@ -70,6 +69,26 @@ func get_default_display_name() -> String:
 	
 func _handle_display_name_value_changed(old_value: String, new_value: String) -> void:
 	on_display_name_changed.emit(old_value, new_value)
+	
+	
+func encode_to_json() -> Dictionary:
+	return {
+		"type": get_type(),
+		"display_name": get_display_name(),
+		"start_time": get_start_time(),
+		"end_time": get_end_time()
+	}
+	
+	
+func decode_from_json(entry : Dictionary) -> void:
+		if entry.has("display_name"):
+			_display_name.set_value(entry["display_name"])
+		_start_time.set_value(entry["start_time"])
+		_end_time.set_value(entry["end_time"])
+	
+
+func get_type() -> String:
+	return ""
 	
 	
 func debug_print() -> void:

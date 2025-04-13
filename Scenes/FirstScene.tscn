@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bjfb3pjs7xrbf"]
+[gd_scene load_steps=3 format=3 uid="uid://bjfb3pjs7xrbf"]
 
 [ext_resource type="Script" path="res://Scripts/first_scene.gd" id="1_hqyvb"]
 [ext_resource type="Script" path="res://Scripts/select_session.gd" id="2_s3swi"]
-[ext_resource type="Script" path="res://Scripts/SessionData.gd" id="4_p33wf"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_hqyvb")
@@ -60,9 +59,6 @@ offset_bottom = 522.0
 text = "Load Session"
 
 [node name="SceneContainer" type="Node2D" parent="."]
-
-[node name="SessionData" type="Node" parent="."]
-script = ExtResource("4_p33wf")
 
 [connection signal="pressed" from="MainMenuUI/BeginHypnosisButton" to="." method="_on_begin_hypnosis_pressed"]
 [connection signal="file_selected" from="MainMenuUI/SelectSession" to="MainMenuUI/SelectSession" method="_on_FileDialog_file_selected"]

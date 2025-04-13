@@ -7,6 +7,15 @@ var _holding_awaited_button: bool = false
 var _time_holding_awaited_button: float = 0.0
 	
 
+static func get_type_static() -> String:
+	return "INTERACT"
+
+
+func _init() -> void:
+	super._init()
+	_end_time.set_value(1.0)
+	
+
 func _begin_element():
 	super._begin_element()
 	_next_awaited_button_index = 0
@@ -76,3 +85,17 @@ func _input(event: InputEvent) -> void:
 func _advance_awaited_button() -> void:
 	_next_awaited_button_index = _next_awaited_button_index + 1
 	_holding_awaited_button = false
+
+
+func encode_to_json() -> Dictionary:
+	var out : Dictionary = super.encode_to_json()
+	#out.get_or_add("path", path)
+	return out
+	
+	
+func decode_from_json(entry : Dictionary) -> void:
+	super.decode_from_json(entry)
+	
+
+func get_type() -> String:
+	return get_type_static()

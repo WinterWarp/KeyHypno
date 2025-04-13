@@ -5,6 +5,7 @@ var SessionSelectedLabel: Label
 var scene_container: Node2D
 var selectedSessionPath: String
 var reader: ZIPReader
+var session_data : SessionData
 
 var hypno_scene_res: Resource
 var hypno_scene: Node2D
@@ -24,6 +25,8 @@ func _ready():
 	scene_container = $SceneContainer
 	ResourceLoader.load_threaded_request(HYPNO_SCENE_PATH)
 	ResourceLoader.load_threaded_request(EDITING_SCENE_PATH)
+	session_data = SessionData.new()
+	add_child(session_data)
 
 
 func start_hypno():
@@ -37,7 +40,7 @@ func start_hypno():
 		hypno_scene.hidden.connect(_on_hypno_scene_hidden)
 	hypno_scene.set_visibility(true)
 	main_menu_ui.visible = false
-	hypno_scene.active_session_data = $SessionData
+	hypno_scene.active_session_data = session_data
 	hypno_scene.zip_reader = reader
 	hypno_scene.begin_session()
 
@@ -48,29 +51,25 @@ func start_editing():
 		editing_scene = editing_scene_res.instantiate()
 		scene_container.add_child(editing_scene)
 		editing_scene.hidden.connect(_on_editing_scene_hidden)
-	editing_scene.open_session_data = $SessionData
+		editing_scene.on_new_session_confirmed.connect(_handle_editing_scene_new_session_confirmed)
+	editing_scene.open_session_data = session_data
 	editing_scene.refresh()
-	editing_scene.set_visibility(true)
+	editing_scene.show()
+	#editing_scene.set_visibility(true)
 	main_menu_ui.visible = false
 
 
 func setSessionPath(path):
 	selectedSessionPath = path
-	var session_data: SessionData = $SessionData
-	reader = ZIPReader.new()
-	reader.open(selectedSessionPath)
-	var files = reader.get_files()
-	files.sort()
-	print(files)
-	load_hypsav(session_data, reader)
+	session_data.load_from_file(path)
 	SessionSelectedLabel.text = "Loaded file:\n" + path.get_file()  # don't clobber up the label with a really long path
 
 
 func go_to_main_menu():
 	if hypno_scene != null:
 		hypno_scene.set_visibility(false)
-	if editing_scene != null:
-		editing_scene.set_visibility(false)
+	#if editing_scene != null:
+		#editing_scene.set_visibility(false)
 	main_menu_ui.visible = true
 
 
@@ -103,92 +102,9 @@ func _on_editing_scene_hidden() -> void:
 	go_to_main_menu()
 
 
-func decode(data: String) -> Array:
-	# parse data
-	var json = JSON.new()
-	var error = json.parse(data)
-	# verify data
-	if error == OK:
-		var data_received = json.data
-		if typeof(data_received) == TYPE_ARRAY:
-			data_received.sort_custom(func(a, b): return a["start_time"] < b["start_time"])  # sort by time so we can assume events are in order
-			return data_received
-		else:
-			print("data is of invalid type")
-			return []
-	else:
-		print(
-			"JSON Parse Error: ",
-			json.get_error_message(),
-			" in ",
-			data,
-			" at line ",
-			json.get_error_line()
-		)
-		return []
-
-
-func encode(data: Array) -> String:
-	return JSON.stringify(data)
-
-
-func load_hypsav(session_data: SessionData, zip_reader: ZIPReader) -> void:
-	var data = zip_reader.read_file("session.hypsav").get_string_from_utf8()
-	session_data.reset_and_clear()
-	var sav = decode(data)
-	for e in sav:
-		var s
-		match e["type"]:
-			"SUBLIMINAL":
-				s = session_data.add_element_of_class(session_data.SubliminalClass)
-			"AUDIO":
-				s = session_data.add_element_of_class(session_data.AudioClass)
-			_:
-				print("invalid event type" + e.type)
-				return
-		s._type = e["type"]
-		if e.has("display_name"):
-			s._display_name.set_value(e["display_name"])
-		else:
-			session_data.assign_unique_default_display_name_to_element(s)
-		s._start_time.set_value(e["start_time"])
-		s._end_time.set_value(e["end_time"])
-		match s._type:
-			"SUBLIMINAL":
-				s._time_per_message.set_value(e["time_per_message"])
-				for line in e["messages"]:
-					s._messages.append(line)
-			"AUDIO":
-				s.path = e["path"]
-			_:
-				print("invalid event type" + e.type)
-	#create_hypsav(session_data)
-
-
-func create_hypsav(session_data: SessionData) -> String:
-	var sav = []
-	for e in session_data._elements:
-		match e._type:
-			"SUBLIMINAL":
-				sav.append(
-					{
-						"type": e._type,
-						"start_time": e.get_start_time(),
-						"end_time": e.get_end_time(),
-						"time_per_message": e.get_time_per_message(),
-						"messages": e._messages
-					}
-				)
-			"AUDIO":
-				sav.append(
-					{
-						"type": e._type,
-						"start_time": e.get_start_time(),
-						"end_time": e.get_end_time(),
-						"path": e.path
-					}
-				)
-			_:
-				print("invalid event type" + e._type)
-
-	return encode(sav)
+func _handle_editing_scene_new_session_confirmed() -> void:
+	session_data = SessionData.new()
+	add_child(session_data)
+	SessionSelectedLabel.text = "Loaded file:\nNothing loaded"
+	editing_scene.open_session_data = session_data
+	editing_scene.refresh()

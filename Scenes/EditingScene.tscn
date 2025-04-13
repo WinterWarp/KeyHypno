@@ -79,26 +79,52 @@ text = "Delete Element"
 [node name="Control2" parent="CanvasLayer/EditElementRootContainer" instance=ExtResource("2_u403d")]
 layout_mode = 2
 
-[node name="NewElementButtonContainer" type="VBoxContainer" parent="."]
-offset_left = -324.0
-offset_top = 454.0
-offset_right = -190.0
-offset_bottom = 555.0
+[node name="NewElementButtonContainer" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 83.0
+offset_top = 509.0
+offset_right = 217.0
+offset_bottom = 610.0
 
-[node name="AddSubliminalButton" type="Button" parent="NewElementButtonContainer"]
+[node name="AddSubliminalButton" type="Button" parent="CanvasLayer/NewElementButtonContainer"]
 layout_mode = 2
 text = "New Subliminal"
 
-[node name="AddInteractButton" type="Button" parent="NewElementButtonContainer"]
+[node name="AddInteractButton" type="Button" parent="CanvasLayer/NewElementButtonContainer"]
 layout_mode = 2
 text = "New Interact"
 
-[node name="AddAudioButton" type="Button" parent="NewElementButtonContainer"]
+[node name="AddAudioButton" type="Button" parent="CanvasLayer/NewElementButtonContainer"]
 layout_mode = 2
 text = "New Audio"
 
+[node name="SaveSessionButton" type="Button" parent="CanvasLayer"]
+offset_left = 1017.0
+offset_top = 66.0
+offset_right = 1124.0
+offset_bottom = 97.0
+text = "Save Session
+"
+
+[node name="NewSessionButton" type="Button" parent="CanvasLayer"]
+offset_left = 1017.0
+offset_top = 145.0
+offset_right = 1124.0
+offset_bottom = 176.0
+text = "New Session
+"
+
+[node name="NewSessionConfirmationDialog" type="ConfirmationDialog" parent="CanvasLayer/NewSessionButton"]
+title = "New Session"
+initial_position = 2
+size = Vector2i(444, 100)
+dialog_text = "Discard current session and start a new empty session?"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="CanvasLayer/BackToMenuButton" to="." method="_on_back_to_menu_button_pressed"]
 [connection signal="item_selected" from="CanvasLayer/ListOfElementsInSession" to="." method="_on_list_of_elements_in_session_item_selected"]
-[connection signal="pressed" from="NewElementButtonContainer/AddSubliminalButton" to="." method="_on_add_subliminal_button_pressed"]
-[connection signal="pressed" from="NewElementButtonContainer/AddInteractButton" to="." method="_on_add_interact_button_pressed"]
-[connection signal="pressed" from="NewElementButtonContainer/AddAudioButton" to="." method="_on_add_audio_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/NewElementButtonContainer/AddSubliminalButton" to="." method="_on_add_subliminal_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/NewElementButtonContainer/AddInteractButton" to="." method="_on_add_interact_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/NewElementButtonContainer/AddAudioButton" to="." method="_on_add_audio_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/SaveSessionButton" to="." method="_on_save_session_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/NewSessionButton" to="." method="_on_new_session_button_pressed"]
+[connection signal="confirmed" from="CanvasLayer/NewSessionButton/NewSessionConfirmationDialog" to="." method="_on_new_session_confirmation_dialog_confirmed"]

@@ -1,9 +1,6 @@
 class_name SessionData
 extends Node
 
-var SubliminalClass = preload("res://Scripts/SessionElement_Subliminal.gd")
-var AudioClass = preload("res://Scripts/SessionElement_Audio.gd")
-
 var _elements: Array[SessionElement]
 var _paused: bool = true
 var _global_time: float = 0.0
@@ -25,6 +22,8 @@ func _process(delta: float) -> void:
 	var time_advancing: bool = _should_time_advance()
 	if time_advancing:
 		_global_time += delta
+	else:
+		delta = 0.0
 	var has_incomplete_element: bool = false
 	for element: SessionElement in _elements:
 		if element.is_element_active():
@@ -115,3 +114,63 @@ func _should_time_advance() -> bool:
 func debug_print() -> void:
 	for element in _elements:
 		element.debug_print()
+
+
+func encode_to_json() -> String:
+	var sav : Array[Dictionary] = []
+	for element in _elements:
+		sav.append(element.encode_to_json())
+	return JSON.stringify(sav)
+
+
+func json_destringify(data: String) -> Array:
+	# parse data
+	var json = JSON.new()
+	var error = json.parse(data)
+	# verify data
+	if error == OK:
+		var data_received : Array = json.data
+		if typeof(data_received) == TYPE_ARRAY:
+			data_received.sort_custom(func(a, b): return a["start_time"] < b["start_time"])  # sort by time so we can assume events are in order
+			return data_received
+		else:
+			print("data is of invalid type")
+			return []
+	else:
+		print(
+			"JSON Parse Error: ",
+			json.get_error_message(),
+			" in ",
+			data,
+			" at line ",
+			json.get_error_line()
+		)
+		return []
+
+func decode_from_json(data: String) -> void:
+	var sav: Array = json_destringify(data)
+	for entry : Dictionary in sav:
+		var element: SessionElement
+		if entry["type"] == SessionElement_Subliminal.get_type_static():
+			element = add_element_of_class(SessionElement_Subliminal)
+		else: if entry["type"] == SessionElement_Audio.get_type_static():
+			element = add_element_of_class(SessionElement_Audio)
+		else: if entry["type"] == SessionElement_Interact.get_type_static():
+			element = add_element_of_class(SessionElement_Interact)
+		else:
+			print("invalid event type" + entry.type)
+			return
+		element.decode_from_json(entry)
+		if !entry.has("display_name"):
+			assign_unique_default_display_name_to_element(element)
+
+
+func load_from_file(path: String) -> void:
+	reset_and_clear()
+	var reader: ZIPReader = ZIPReader.new()
+	reader.open(path)
+	var files = reader.get_files()
+	files.sort()
+	print(files)
+	var data: String = reader.read_file("Elements.txt").get_string_from_utf8()
+	decode_from_json(data)
