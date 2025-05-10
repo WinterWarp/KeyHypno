@@ -188,13 +188,7 @@ func _on_save_session_button_pressed() -> void:
 
 
 func _handle_save_file_selected(path: String) -> void:
-	packer = ZIPPacker.new()
-	packer.open(path)
-	packer.start_file("Elements.txt")
-	var save_raw: String = open_session_data.encode_to_json()
-	packer.write_file(save_raw.to_utf8_buffer());
-	packer.close_file()
-	packer.close()
+	open_session_data.save_to(path)
 
 
 func _on_visibility_changed() -> void:

@@ -35,10 +35,14 @@ func draw_session():
 	var active_audio = active_elements.filter(
 		func(element: SessionElement): return element is SessionElement_Audio
 	)
-	if active_audio.size() == 0  && !player.path.is_empty():
-		player.play_path(zip_reader, "")
-	elif active_audio.size() > 0 && active_audio[0].path != player.path && !session_data._paused:
-		player.play_path(zip_reader, active_audio[0].path)
+	if active_audio.size() == 0  && player.playing:
+		player.stop()
+		player.stream = null
+	elif active_audio.size() > 0 && !session_data._paused:
+		var audio_data: PackedByteArray = active_audio[0].get_audio_data()
+		if !player.is_playing_data(audio_data):
+			var audio_ext: String = active_audio[0].get_audio_ext()
+			player.play_ext(audio_data, audio_ext)
 		
 	var active_interacts = active_elements.filter(
 		func(element: SessionElement): return element is SessionElement_Interact
@@ -58,8 +62,8 @@ func draw_session():
 			else:
 				interact_label.text = "Press the " + key_string + " key."
 	
-	var debug_string: String = "%s" % session_data._global_time
-	debug_label.text = debug_string
+	#var debug_string: String = "%.1f" % session_data._global_time
+	#debug_label.text = debug_string
 
 	#for session_element : SessionElement in active_elements:
 	#if(session_element is SessionElement_Subliminal):

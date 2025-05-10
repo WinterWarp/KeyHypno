@@ -108,6 +108,10 @@ func get_type() -> String:
 	return get_type_static()
 
 
+func can_run() -> bool:
+	return _messages.size() > 0
+
+
 func debug_print() -> void:
 	super.debug_print()
 	print("_messages: ")

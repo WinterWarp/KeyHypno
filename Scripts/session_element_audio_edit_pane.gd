@@ -31,7 +31,7 @@ func _on_select_path_button_pressed() -> void:
 
 func _handle_file_selected(path: String) -> void:
 	print(path)
-	_editing_element.path = path
+	_editing_element.set_local_path(path)
 	_populate()
 
 

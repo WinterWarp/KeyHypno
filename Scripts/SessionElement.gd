@@ -21,7 +21,7 @@ func _begin_element():
 
 func _process_element(delta: float):
 	_local_time += delta
-	if _end_time.get_value() >= 0.0 && _local_time > _end_time.get_value():
+	if _end_time.get_value() >= 0.0 && _start_time.get_value() + _local_time > _end_time.get_value():
 		_end_element()
 		return false
 	return true
@@ -89,6 +89,18 @@ func decode_from_json(entry : Dictionary) -> void:
 
 func get_type() -> String:
 	return ""
+
+
+func save_files_to_new_manifest(session_data: SessionData) -> void:
+	pass
+
+
+func populate_file_data_from_manifest(session_data: SessionData) -> void:
+	pass
+
+
+func can_run() -> bool:
+	return true
 	
 	
 func debug_print() -> void:
