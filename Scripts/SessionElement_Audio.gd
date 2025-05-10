@@ -48,10 +48,6 @@ func set_local_path(in_path: String) -> void:
 	file.set_to_local_file_path(in_path)
 
 
-func get_files_to_save() -> Array[SessionResourceFilePointer]:
-	return [file];
-
-
 func save_files_to_new_manifest(session_data: SessionData) -> void:
 	session_data.add_file_to_new_manifest(file)
 
