@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdl3j40ih58fc"]
 
-[ext_resource type="Script" uid="uid://dp6t60wu1nt45" path="res://Scripts/hypno_scene.gd" id="1_lcxrx"]
-[ext_resource type="Script" uid="uid://djp2alolwjf37" path="res://Scripts/subliminal.gd" id="2_byw8y"]
-[ext_resource type="Script" uid="uid://kwedc6vfxl4f" path="res://Scripts/session_canvas.gd" id="2_hltvx"]
-[ext_resource type="Script" uid="uid://dme4gk77yds86" path="res://Scripts/audio.gd" id="4_hefst"]
+[ext_resource type="Script" uid="uid://dp6t60wu1nt45" path="res://Scripts/Session/hypno_scene.gd" id="1_lcxrx"]
+[ext_resource type="Script" uid="uid://djp2alolwjf37" path="res://Scripts/Session/subliminal.gd" id="2_byw8y"]
+[ext_resource type="Script" uid="uid://kwedc6vfxl4f" path="res://Scripts/Session/session_canvas.gd" id="2_hltvx"]
+[ext_resource type="Script" uid="uid://dme4gk77yds86" path="res://Scripts/Session/audio.gd" id="4_hefst"]
 
 [node name="HypnoScene" type="Node2D"]
 script = ExtResource("1_lcxrx")

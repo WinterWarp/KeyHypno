@@ -7,3 +7,5 @@
 *.pck
 *.mp3
 *.import
+
+.vscode/

@@ -1,10 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://dcuw6mx1gt4su"]
 
-[ext_resource type="Script" uid="uid://by2mwkxqpmijg" path="res://Scripts/editing_scene.gd" id="1_lwjxk"]
+[ext_resource type="Script" uid="uid://by2mwkxqpmijg" path="res://Scripts/Editing/editing_scene.gd" id="1_lwjxk"]
 [ext_resource type="PackedScene" uid="uid://br4jmmu48sjyr" path="res://Scenes/InteractionKeyEditPane.tscn" id="2_u403d"]
 
 [node name="Node2D" type="Node2D"]
-position = Vector2(407, 55)
 script = ExtResource("1_lwjxk")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

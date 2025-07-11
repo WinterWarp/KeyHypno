@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bjfb3pjs7xrbf"]
 
-[ext_resource type="Script" uid="uid://dillbmq2hj41a" path="res://Scripts/first_scene.gd" id="1_hqyvb"]
-[ext_resource type="Script" uid="uid://cn43wlv5flkoq" path="res://Scripts/select_session.gd" id="2_s3swi"]
+[ext_resource type="Script" uid="uid://dillbmq2hj41a" path="res://Scripts/FirstScreen/first_scene.gd" id="1_hqyvb"]
+[ext_resource type="Script" uid="uid://cn43wlv5flkoq" path="res://Scripts/FirstScreen/select_session.gd" id="2_s3swi"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_hqyvb")
