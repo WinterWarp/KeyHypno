@@ -11,7 +11,7 @@ func _ready() -> void:
 func _on_FileDialog_file_selected(path: String):
 	match path.right(6).to_lower():
 		"hypsav":
-			Main.setSessionPath(path)
+			Main.load_session(path)
 		_:
 			print("unexpected file type")
 	

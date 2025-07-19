@@ -41,16 +41,6 @@ func refresh():
 			_add_element_to_display_list(element)
 
 
-#func set_visibility(in_is_visible: bool):
-	#show()
-	#_canvas_layer.visible = in_is_visible
-
-
-func is_scene_active() -> bool:
-	#return _canvas_layer.visible
-	return visible
-
-
 func _on_add_subliminal_button_pressed() -> void:
 	var new_element: SessionElement_Subliminal = SubliminalClass.new()
 	_set_up_new_element(new_element)

@@ -1,7 +1,6 @@
 extends CanvasLayer
 
 var session_data: SessionData
-var zip_reader: ZIPReader
 var player: AudioStreamPlayer
 var subliminal_label: Label
 var debug_label: Label
@@ -16,9 +15,8 @@ func _ready():
 
 
 func _process(_delta: float):
-	if session_data != null:
+	if session_data != null && visible:
 		draw_session()
-
 
 func draw_session():
 	var active_elements: Array[SessionElement] = session_data.get_active_elements()
