@@ -11,9 +11,9 @@ var _currently_editing_index: int
 var reader: ZIPReader
 var packer: ZIPPacker
 
-var SubliminalClass = preload("res://Scripts/SessionElement_Subliminal.gd")
-var InteractClass = preload("res://Scripts/SessionElement_Interact.gd")
-var AudioClass = preload("res://Scripts/SessionElement_Audio.gd")
+var SubliminalClass = preload("res://Scripts/Processing/SessionElement_Subliminal.gd")
+var InteractClass = preload("res://Scripts/Processing/SessionElement_Interact.gd")
+var AudioClass = preload("res://Scripts/Processing/SessionElement_Audio.gd")
 var SessionElementInteractEditPaneScene = preload("res://Scenes/SessionElement_Interact_EditPane.tscn")
 var SessionElementAudioEditPaneScene = preload("res://Scenes/SessionElement_Audio_EditPane.tscn")
 var SaveSessionDialogScene = preload("res://Scenes/SaveSessionDialog.tscn")
