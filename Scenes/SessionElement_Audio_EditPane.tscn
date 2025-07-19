@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d0bqh4xud3qr3"]
 
-[ext_resource type="Script" path="res://Scripts/session_element_audio_edit_pane.gd" id="1_8dfbb"]
+[ext_resource type="Script" uid="uid://cbh6dis2j82h2" path="res://Scripts/Editing/session_element_audio_edit_pane.gd" id="1_8dfbb"]
 
 [node name="AudioEditPane" type="VBoxContainer"]
 offset_right = 8.0

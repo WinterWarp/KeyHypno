@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://br4jmmu48sjyr"]
 
-[ext_resource type="Script" path="res://Scripts/interaction_key_edit_pane.gd" id="1_41ox1"]
-[ext_resource type="Script" path="res://Scripts/FloatPropLineEdit.gd" id="2_ewies"]
+[ext_resource type="Script" uid="uid://cjoioqq1di7gm" path="res://Scripts/Editing/interaction_key_edit_pane.gd" id="1_41ox1"]
+[ext_resource type="Script" uid="uid://f6lanu0lk36e" path="res://Scripts/Editing/FloatPropLineEdit.gd" id="2_ewies"]
 
 [node name="InteractionKeyEditPane" type="VBoxContainer"]
 offset_right = 185.0
