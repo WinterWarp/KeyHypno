@@ -1,24 +1,21 @@
 extends FileDialog
 
-var selectedfile
-var Main: Node2D
+signal on_session_file_selected(path: String)
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	Main = $"../.."
-	pass # Replace with function body.
-
-func _on_FileDialog_file_selected(path: String):
-	match path.right(6).to_lower():
-		"hypsav":
-			Main.load_session(path)
-		_:
-			print("unexpected file type")
+	pass
 	
 
-func _on_load_file_pressed():
+func _handle_file_selected(path: String):
+	var extension: String = path.get_extension()
+	match extension:
+		"hypsav":
+			on_session_file_selected.emit(path)
+		_:
+			# TODO: show a user-facing error message
+			print("Expected hypsav file, cannot process '", path.get_file(), "'")
+	
+
+func _handle_load_file_pressed():
 	popup()
-
-
-func _on_demo_session_1_button_pressed() -> void:
-	pass # Replace with function body.

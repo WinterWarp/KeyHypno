@@ -192,3 +192,8 @@ func _on_new_session_button_pressed() -> void:
 
 func _on_new_session_confirmation_dialog_confirmed() -> void:
 	on_new_session_confirmed.emit()
+
+
+func set_session_data(in_session_data: SessionData) -> void:
+	open_session_data = in_session_data
+	refresh()
