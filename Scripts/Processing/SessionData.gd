@@ -3,9 +3,12 @@ extends Node
 
 var _elements: Array[SessionElement]
 var _paused: bool = true
+var _at_end: bool = true
 var _global_time: float = 0.0
 var _file_manifest: Array[SessionResourceFile]
 var _new_file_manifest: Array[SessionResourceFile]
+
+signal on_session_end_reached()
 
 
 func _ready() -> void:
@@ -14,31 +17,37 @@ func _ready() -> void:
 
 func begin_session():
 	_global_time = 0.0
+	_at_end = false
+	for element: SessionElement in _elements:
+		element.reset_element_execution()
 	_paused = false
 
 
 func _process(delta: float) -> void:
 	if _paused:
 		return
+	
+	# Advance time
 	var old_global_time: float = _global_time
 	var time_advancing: bool = _should_time_advance()
 	if time_advancing:
 		_global_time += delta
 	else:
 		delta = 0.0
+	
 	var has_incomplete_element: bool = false
 	for element: SessionElement in _elements:
 		if element.is_element_active():
 			if time_advancing || element is SessionElement_Interact:
-				element._process_element(delta)
+				element.process_element(delta)
 		else:
 			if (
 				old_global_time <= element.get_start_time()
 				and _global_time > element.get_start_time()
 				and element.can_run()
 			):
-				element._begin_element()
-				element._process_element(_global_time - element.get_start_time())
+				element.begin_element()
+				element.process_element(_global_time - element.get_start_time())
 		has_incomplete_element = (
 			has_incomplete_element
 			|| element.is_element_active()
@@ -46,13 +55,19 @@ func _process(delta: float) -> void:
 		)
 	if !has_incomplete_element:
 		_paused = true
+		_at_end = true
+		on_session_end_reached.emit()
 
 
-func add_element(new_element: SessionElement):
+func is_at_end() -> bool:
+	return _at_end
+
+
+func add_element(new_element: SessionElement) -> void:
 	_elements.append(new_element)
 
 
-func delete_element(element: SessionElement):
+func delete_element(element: SessionElement) -> void:
 	var index: int = _elements.find(element)
 	_elements.remove_at(index)
 

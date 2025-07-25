@@ -35,8 +35,8 @@ func _start_hypno():
 		_hypno_scene = _hypno_scene_res.instantiate()
 		_scene_container.add_child(_hypno_scene)
 		_hypno_scene.hidden.connect(_handle_hypno_scene_hidden)
+	_hypno_scene.set_session_data(session_data)
 	_hypno_scene.show()
-	_hypno_scene.active_session_data = session_data
 	_hypno_scene.begin_session()
 
 

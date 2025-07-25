@@ -14,23 +14,23 @@ static func get_type_static() -> String:
 func _init() -> void:
 	super._init()
 	_end_time.set_value(1.0)
-	
-func _begin_element():
-	super._begin_element()
+
+
+func begin_element():
+	super.begin_element()
 	_message_index = -1
 	_randomise_message_index()
 	_time_since_message_change = 0.0
 
 
-func _process_element(delta: float):
-	var StillRunning = super._process_element(delta)
-	if !StillRunning:
-		return false
+func process_element(delta: float) -> void:
+	super.process_element(delta)
+	if !is_element_active():
+		return
 	_time_since_message_change += delta
 	if _time_since_message_change > _time_per_message.get_value():
 		_time_since_message_change -= _time_per_message.get_value()
 		_randomise_message_index()
-	return true
 
 
 func _end_element():
@@ -69,22 +69,6 @@ func get_time_per_message():
 func get_time_per_message_ref():
 	return _time_per_message
 
-
-#func save_file(path):
-#	var file = FileAccess.open(path, FileAccess.WRITE)
-#	for message in _messages:
-#		file.store_string(message + "\n")
-
-
-#func load_file(path):
-#	var file = FileAccess.open(path, FileAccess.READ)
-#	var content = file.get_as_text()
-#	print(content)
-#	var content_packed_array = content.split("\n")
-#	print("packed array: ", content_packed_array.size())
-#	for packed_string in content_packed_array:
-#		_messages.append(packed_string)
-	
 
 func get_default_display_name() -> String:
 	return "Subliminal"

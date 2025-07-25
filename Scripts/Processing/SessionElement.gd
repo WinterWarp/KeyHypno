@@ -14,21 +14,20 @@ func _init() -> void:
 	_display_name.on_value_changed.connect(_handle_display_name_value_changed)
 	
 
-func _begin_element():
+func begin_element():
 	_is_active = true
 	_local_time = 0.0
 
 
-func _process_element(delta: float):
+func process_element(delta: float) -> void:
 	_local_time += delta
 	if _end_time.get_value() >= 0.0 && _start_time.get_value() + _local_time > _end_time.get_value():
 		_end_element()
-		return false
-	return true
 
 
-func _end_element():
+func reset_element_execution():
 	_is_active = false
+	_local_time = 0.0
 
 
 func get_display_name() -> String:
@@ -65,6 +64,10 @@ func is_element_active():
 
 func get_default_display_name() -> String:
 	return "Element"
+
+
+func _end_element():
+	_is_active = false
 	
 	
 func _handle_display_name_value_changed(old_value: String, new_value: String) -> void:

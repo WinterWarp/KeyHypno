@@ -16,11 +16,8 @@ func _init() -> void:
 	file = SessionResourceFilePointer.new()
 
 
-func _process_element(delta: float):
-	var StillRunning = super._process_element(delta)
-	if !StillRunning:
-		return false
-	return true
+func process_element(delta: float) -> void:
+	super.process_element(delta)
 	
 
 func get_default_display_name() -> String:

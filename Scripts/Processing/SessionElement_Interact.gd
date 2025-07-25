@@ -16,26 +16,25 @@ func _init() -> void:
 	_end_time.set_value(1.0)
 	
 
-func _begin_element():
-	super._begin_element()
+func begin_element():
+	super.begin_element()
 	_next_awaited_button_index = 0
 
 
-func _process_element(delta: float) -> bool:
-	var still_running = super._process_element(delta)
-	if !still_running:
-		return false
+func process_element(delta: float) -> void:
+	# Deliberately don't call Super function
+	
 	if _next_awaited_button_index >= _button_sequence.size():
 		_end_element()
-		return false
+		return
+		
 	if _holding_awaited_button:
 		_time_holding_awaited_button += delta
 		if _time_holding_awaited_button > get_awaited_interact().get_hold_time():
 			_advance_awaited_button()
 		if _next_awaited_button_index >= _button_sequence.size():
 			_end_element()
-			return false
-	return true
+			return
 
 
 func get_awaited_interact() -> ButtonInteract:
