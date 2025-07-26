@@ -59,6 +59,10 @@ func _process(delta: float) -> void:
 		on_session_end_reached.emit()
 
 
+func is_paused() -> bool:
+	return _paused
+
+
 func is_at_end() -> bool:
 	return _at_end
 

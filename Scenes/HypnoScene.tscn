@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dp6t60wu1nt45" path="res://Scripts/Session/hypno_scene.gd" id="1_lcxrx"]
 [ext_resource type="Script" uid="uid://djp2alolwjf37" path="res://Scripts/Session/subliminal.gd" id="2_byw8y"]
 [ext_resource type="Script" uid="uid://kwedc6vfxl4f" path="res://Scripts/Session/session_canvas.gd" id="2_hltvx"]
-[ext_resource type="Script" uid="uid://dme4gk77yds86" path="res://Scripts/Session/audio.gd" id="4_hefst"]
+[ext_resource type="Script" uid="uid://dme4gk77yds86" path="res://Scripts/Session/session_audio_player.gd" id="4_hefst"]
 
 [node name="HypnoScene" type="Node2D"]
 script = ExtResource("1_lcxrx")
@@ -47,14 +47,14 @@ grow_vertical = 2
 text = "Press the A key"
 horizontal_alignment = 1
 
+[node name="SessionAudioPlayer" type="AudioStreamPlayer" parent="SessionCanvas"]
+script = ExtResource("4_hefst")
+
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[node name="ASPlayer2D" type="AudioStreamPlayer" parent="Control"]
-script = ExtResource("4_hefst")
 
 [node name="MainMenuButton" type="Button" parent="."]
 anchors_preset = 1

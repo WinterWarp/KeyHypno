@@ -3,22 +3,26 @@ extends CanvasLayer
 const END_OF_SESSION_TEXT: String = "END OF SESSION"
 
 var _session_data: SessionData
-var player: AudioStreamPlayer
-var subliminal_label: Label
-var debug_label: Label
+@onready
+var player: AudioStreamPlayer = $SessionAudioPlayer
+@onready
+var subliminal_label: Label = $SubliminalLabel
+@onready
+var debug_label: Label = $DebugLabel
 @onready
 var interact_label: Label = $InteractLabel
 
 
-func _ready():
-	subliminal_label = $SubliminalLabel
-	player = get_node("../Control/ASPlayer2D")
-	debug_label = $DebugLabel
+func _ready() -> void:
+	pass
 
 
-func _process(_delta: float):
+func _process(_delta: float) -> void:
 	if _session_data != null && visible:
 		draw_session()
+	if !visible:
+		if player.playing:
+			player.stop()
 
 
 func set_session_data(in_session_data: SessionData) -> void:
@@ -28,36 +32,46 @@ func set_session_data(in_session_data: SessionData) -> void:
 	_session_data.on_session_end_reached.connect(_handle_session_end_reached)
 
 
-func draw_session():
+func draw_session() -> void:
 	var active_elements: Array[SessionElement] = _session_data.get_active_elements()
 	
-	var active_subliminals = active_elements.filter(
+	# Subliminals
+	var active_subliminals: Array[SessionElement_Subliminal]
+	active_subliminals.assign(active_elements.filter(
 		func(element: SessionElement): return element is SessionElement_Subliminal
-	)
+	))
 	if _session_data.is_at_end():
 		# Don't touch the sub label, it's been updated in _handle_session_end_reached
 		pass
-	else: if active_subliminals.is_empty():
+	elif active_subliminals.is_empty():
 		subliminal_label.visible = false
 	else:
 		subliminal_label.visible = true
 		subliminal_label.text = active_subliminals[0].get_current_message()
-		
-	var active_audio = active_elements.filter(
+	
+	# Audio
+	var active_audios: Array[SessionElement_Audio]
+	active_audios.assign(active_elements.filter(
 		func(element: SessionElement): return element is SessionElement_Audio
-	)
-	if active_audio.size() == 0  && player.playing:
+	))
+	if active_audios.size() == 0  && player.playing:
+		player.stop_and_clear()
+	elif _session_data.is_paused():
+		# TODO: This presumably loses the place in the audio stream.
+		# Should keep it so it can be resumed.
 		player.stop()
-		player.stream = null
-	elif active_audio.size() > 0 && !_session_data._paused:
-		var audio_data: PackedByteArray = active_audio[0].get_audio_data()
+	elif active_audios.size() > 0 && !_session_data.is_paused():
+		# TODO: support multiple audio streams
+		var audio_data: PackedByteArray = active_audios[0].get_audio_data()
 		if !player.is_playing_data(audio_data):
-			var audio_ext: String = active_audio[0].get_audio_ext()
-			player.play_ext(audio_data, audio_ext)
-		
-	var active_interacts = active_elements.filter(
+			var audio_ext: String = active_audios[0].get_audio_ext()
+			player.play_file_data(audio_data, audio_ext)
+	
+	# Interacts
+	var active_interacts: Array[SessionElement_Interact]
+	active_interacts.assign(active_elements.filter(
 		func(element: SessionElement): return element is SessionElement_Interact
-	)
+	))
 	if active_interacts.is_empty():
 		interact_label.visible = false
 	else:

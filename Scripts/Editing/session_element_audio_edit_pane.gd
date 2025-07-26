@@ -9,17 +9,17 @@ var AudioFileSelectScene = preload("res://Scenes/AudioFileSelect.tscn")
 var PathLabel = $PathLabel
 
 
-func set_editing_element(in_editing_element: SessionElement_Audio) -> void:
-	_editing_element = in_editing_element
-	_populate()
-
-
 func _ready() -> void:
 	pass
 
 
 func _process(_delta: float) -> void:
 	pass
+
+
+func set_editing_element(in_editing_element: SessionElement_Audio) -> void:
+	_editing_element = in_editing_element
+	_populate()
 
 
 func _on_select_path_button_pressed() -> void:
