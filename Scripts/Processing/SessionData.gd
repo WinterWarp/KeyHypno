@@ -178,6 +178,8 @@ func decode_from_json(data: String) -> void:
 			element = add_element_of_class(SessionElement_Audio)
 		else: if entry["type"] == SessionElement_Interact.get_type_static():
 			element = add_element_of_class(SessionElement_Interact)
+		else: if entry["type"] == SessionElement_AudioGen.get_type_static():
+			element = add_element_of_class(SessionElement_AudioGen)
 		else:
 			print("invalid event type" + entry.type)
 			return

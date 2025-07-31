@@ -11,6 +11,8 @@ var subliminal_label: Label = $SubliminalLabel
 var debug_label: Label = $DebugLabel
 @onready
 var interact_label: Label = $InteractLabel
+@onready
+var audio_generator: AudioStreamPlayer = $AudioGen
 
 
 func _ready() -> void:
@@ -23,6 +25,8 @@ func _process(_delta: float) -> void:
 	if !visible:
 		if player.playing:
 			player.stop()
+		if audio_generator.playing:
+			audio_generator.stop_playback()
 
 
 func set_session_data(in_session_data: SessionData) -> void:
@@ -86,6 +90,22 @@ func draw_session() -> void:
 				interact_label.text = "Hold the " + key_string + " key for " + str(hold_time) + " seconds."
 			else:
 				interact_label.text = "Press the " + key_string + " key."
+
+	# AudioGen
+	var active_audio_gen: Array[SessionElement_AudioGen]
+	active_audio_gen.assign(active_elements.filter(
+		func(element: SessionElement): return element is SessionElement_AudioGen
+	))
+	
+	if (active_audio_gen.is_empty() and audio_generator.playing) or _session_data.is_paused():
+			audio_generator.stop_playback()
+			audio_generator.stop()
+	elif !active_audio_gen.is_empty() and !audio_generator.playing and !_session_data.is_paused():
+		audio_generator.amplitude = active_audio_gen[0].amplitude.get_value()
+		audio_generator.begin_playback(
+			active_audio_gen[0].left_frequency.get_value(),
+			active_audio_gen[0].right_frequency.get_value()
+		)
 
 
 func _input(event: InputEvent) -> void:
