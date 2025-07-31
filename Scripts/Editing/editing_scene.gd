@@ -14,6 +14,7 @@ var packer: ZIPPacker
 var SubliminalClass = preload("res://Scripts/Processing/SessionElement_Subliminal.gd")
 var InteractClass = preload("res://Scripts/Processing/SessionElement_Interact.gd")
 var AudioClass = preload("res://Scripts/Processing/SessionElement_Audio.gd")
+var AudioGenClass = preload("res://Scripts/Processing/SessionElement_AudioGen.gd")
 var SessionElementInteractEditPaneScene = preload("res://Scenes/SessionElement_Interact_EditPane.tscn")
 var SessionElementAudioEditPaneScene = preload("res://Scenes/SessionElement_Audio_EditPane.tscn")
 var SaveSessionDialogScene = preload("res://Scenes/SaveSessionDialog.tscn")
@@ -55,6 +56,9 @@ func _on_add_audio_button_pressed() -> void:
 	var new_element: SessionElement_Audio = AudioClass.new()
 	_set_up_new_element(new_element)
 
+func _on_add_audio_gen_button_pressed() -> void:
+	var new_element: SessionElement_AudioGen = AudioGenClass.new()
+	_set_up_new_element(new_element)
 
 func _set_up_new_element(new_element: SessionElement) -> void:
 	open_session_data.assign_unique_default_display_name_to_element(new_element)
@@ -122,6 +126,11 @@ func _populate_edit_container_for_element(element: SessionElement) -> void:
 		var audio_edit_pane = SessionElementAudioEditPaneScene.instantiate()
 		_edit_element_root_container.add_child(audio_edit_pane)
 		audio_edit_pane.set_editing_element(_currently_editing_element)
+	else: if _currently_editing_element is SessionElement_AudioGen:
+		_add_float_prop_to_edit_container("Left Frequency:", _currently_editing_element.get_left_frequency_ref())
+		_add_float_prop_to_edit_container("Right Frequency:", _currently_editing_element.get_right_frequency_ref())
+		_add_float_prop_to_edit_container("Amplitude:", _currently_editing_element.get_amplitude_ref())
+		
 
 	
 	var delete_button: Button = Button.new()
